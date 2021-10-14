@@ -17,7 +17,6 @@ const substractAction = (ary) => ({
   payload: { values: ary }
 })
 
-
 const mathReducer = (state=initialValues, action) => {
   switch (action.type) {
     case "ADD":
@@ -30,7 +29,7 @@ const mathReducer = (state=initialValues, action) => {
 }
 
 const PlusMinusContainer = connect(
-  state => ({ values: state.values }),
+  _state => ({}),
   dispatch => ({ 
     handleAdd: ary => dispatch(addAction(ary)),
     handleSubstract: ary =>  dispatch(substractAction(ary))
@@ -38,21 +37,31 @@ const PlusMinusContainer = connect(
 )(PlusMinusComponent)
 
 
-const store = createStore(mathReducer, initialValues)
+const ShowAryContainer = connect(
+  state => ({values: state.values}),
+  _dispatch => ({})
+)(ShowAryComponent)
 
-function PlusMinusComponent({values, handleAdd, handleSubstract}) {
+function PlusMinusComponent({handleAdd, handleSubstract}) {
   return <>
-    <h1>Ajouter ou soustraire 1 à toutes les valeurs</h1>
-    {values.map((v,i) => <span key={i}> {v} /</span>)}
-    <br/>
     <button onClick={() => handleAdd([1,1,1,1,1,1,1])} >+</button>
     <button onClick={() => handleSubstract([1,1,1,1,1,1,1])} >-</button>
   </>;
 }
 
+function ShowAryComponent({values}) {
+  return <>
+    <h1>Ajouter ou soustraire 1 à toutes les valeurs</h1>
+    {values.map((v,i) => <span key={i}> {v} /</span>)}
+    <br/>
+  </>;
+}
+
+const store = createStore(mathReducer, initialValues)
 
 render(
   <Provider store={store}>
+    <ShowAryContainer />
     <PlusMinusContainer />
   </Provider>,
   document.getElementById("wrapper")
